@@ -13,3 +13,5 @@
 - `terraform output ip`
 - `ssh -i <private-key> <user>@<ip>`
 - `terraform destroy`
+
+Note: examin default firewall rules associated with the default VPC since those isn't touched by Terraform.
