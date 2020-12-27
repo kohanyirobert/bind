@@ -1,0 +1,9 @@
+.terraform/
+terraform
+*.tfstate
+*.tfplan
+terraform.tfvars
+ns1_credentials.json
+ns2_credentials.json
+id_rsa
+id_rsa.pub
