@@ -32,6 +32,8 @@ Note: examine default firewall rules associated with default VPCs since those wo
 - This is required to create _glue records_ in the _com._ parent domain
 - Run `terraform output` to view the static external IP addresses assigned to the name servers
 
+Note: to view if glue records are in place already use `dig +norecurse @$(dig +short com. NS | head -1) ns1.example.com. NS`
+
 ## Remote access
 
 Use one of these
