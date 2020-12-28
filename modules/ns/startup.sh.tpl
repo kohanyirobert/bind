@@ -1,13 +1,6 @@
 #!/bin/bash
 echo start
 
-flag_file=/root/.ran-gce-startup-script
-if [ -f $flag_file ]
-then
-  echo skip
-  exit 0
-fi
-
 backup_file() {
   local file="$1"
   if [ ! -f "$1".orig ]
@@ -75,7 +68,5 @@ systemctl enable bind9
 systemctl enable fail2ban
 systemctl restart bind9
 systemctl restart fail2ban
-
-touch $flag_file
 
 echo end

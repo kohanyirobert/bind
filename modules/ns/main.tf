@@ -68,14 +68,15 @@ resource "google_compute_instance" "ns" {
   zone         = var.zone
 
   metadata = {
-    ssh-keys       = "${var.user}:${file(var.public_key_path)}"
-    startup-script = templatefile("${path.module}/startup.sh.tpl", {
-      domain = var.domain
-      master = var.master
-      ns1_ip = var.ns1_ip
-      ns2_ip = var.ns2_ip
-    })
+    ssh-keys = "${var.user}:${file(var.public_key_path)}"
   }
+
+  metadata_startup_script = templatefile("${path.module}/startup.sh.tpl", {
+    domain = var.domain
+    master = var.master
+    ns1_ip = var.ns1_ip
+    ns2_ip = var.ns2_ip
+  })
 
   tags = [
     var.master ? "ns1" : "ns2",
@@ -97,5 +98,11 @@ resource "google_compute_instance" "ns" {
     access_config {
       nat_ip = var.master ? var.ns1_ip : var.ns2_ip
     }
+  }
+
+  service_account {
+    scopes = [
+      "logging-write",
+    ]
   }
 }
