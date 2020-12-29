@@ -1,14 +1,6 @@
 #!/bin/bash
 echo start
 
-backup_file() {
-  local file="$1"
-  if [ ! -f "$1".orig ]
-  then
-    cp -v "$1" "$1".orig
-  fi
-}
-
 apt-get update
 apt-get install --yes \
   bind9 \
@@ -19,21 +11,18 @@ apt-get install --yes \
   psmisc \
   tmux
 
-pushd /etc/bind
-conf=named.conf.local
-backup_file $conf
+conf=/etc/bind/named.conf.local
+test ! -f $conf && cp -v $conf $conf.orig
 cat > $conf << EOF
 zone "${domain}" {
 %{~ if master }
   type master;
-  // NOTE: mind the absolute path
-  file "/etc/bind/db.${domain}";
+  file "db.${domain}";
   allow-transfer {
     ${ns2_ip};
   };
 %{ else }
   type slave;
-  // NOTE: mind the relative path
   file "db.${domain}";
   masters {
     ${ns1_ip};
@@ -42,7 +31,9 @@ zone "${domain}" {
 };
 EOF
 %{ if master }
-cat > db.${domain} <<'EOF'
+sudo -u bind -s << 'EOF1'
+zone=/var/cache/bind/db.${domain}
+cat > $zone << 'EOF2'
 $TTL 1m
 @   IN SOA ns1.${domain}. root.${domain}. (
            1  ; Serial
@@ -57,9 +48,9 @@ $TTL 1m
 
 ns1 IN A   ${ns1_ip}
 ns2 IN A   ${ns2_ip}
-EOF
+EOF2
+EOF1
 %{ endif }
-popd
 
 sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
