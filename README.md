@@ -38,6 +38,18 @@ Note: examine default firewall rules associated with default VPCs since those wo
 
 Note: to view if glue records are in place already use `dig +norecurse @$(dig +short com. NS | head -1) ns1.example.com. NS`
 
+## Update DNS records
+
+Use `nsupdate` with the `ddns.key`.
+
+```sh
+nsupdate -k ddns.key << EOF
+debug
+update add sample.example.com. 60 A 127.0.0.1
+send
+EOF
+```
+
 ## Remote access
 
 Use one of these
