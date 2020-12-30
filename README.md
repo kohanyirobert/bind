@@ -5,8 +5,12 @@ Terraform automation that creates two name servers under two separate GCP accoun
 ## Prerequisites
 
 - Have access to two separate GCP accounts
-- Create an SSH keypair for the Unix user account used to connect to the name server machines to be created
 - Have control over a domain name (e.g. _example.com._)
+- Create an SSH keypair (using `ssh-keygen`) for the Unix user account used to connect to the name server machines to be created (e.g. `id_rsa{.pub}`)
+- Create a TSIG key (using `tsig-keygen`) to be used for secure zone transfers between name server (e.g. named `ns1-ns2`, saved to `ns1-ns2.key`)
+- Create a TSIG key to be used for secure DDNS updates (e.g. named `ddns`, saved to `ddns.key`)
+
+Note: `tsig-keygen` generates files using tabs instead of spaces in it, to overcome this use `tsig-keygen ddns | sed 's/\t/  /g' > ddns.key`.
 
 ## Steps for each account
 

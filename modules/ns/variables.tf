@@ -37,3 +37,23 @@ variable "domain" {
   description = "Domain name to manage"
   type        = string
 }
+
+variable "ns1_ns2_key_name" {
+  description = "Name of the TSIG key used for communication between NS1 and NS2"
+  type        = string
+}
+
+variable "ns1_ns2_key_path" {
+  description = "Path to the TSIG key used for communication between NS1 and NS2"
+  type        = string
+}
+
+variable "ddns_key_name" {
+  description = "Name of the TSIG key used for secure DDNS updates"
+  type        = string
+}
+
+variable "ddns_key_path" {
+  description = "Path to the TSIG key used for secure DDNS updates"
+  type        = string
+}

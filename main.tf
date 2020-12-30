@@ -52,6 +52,11 @@ module "ns1" {
   public_key_path = var.public_key_path
   domain          = var.domain
 
+  ns1_ns2_key_name = var.ns1_ns2_key_name
+  ns1_ns2_key_path = var.ns1_ns2_key_path
+  ddns_key_name    = var.ddns_key_name
+  ddns_key_path    = var.ddns_key_path
+
   providers = {
     google = google.ns1
   }
@@ -67,6 +72,11 @@ module "ns2" {
   user            = var.user
   public_key_path = var.public_key_path
   domain          = var.domain
+
+  ns1_ns2_key_name = var.ns1_ns2_key_name
+  ns1_ns2_key_path = var.ns1_ns2_key_path
+  ddns_key_name    = var.ddns_key_name
+  ddns_key_path    = var.ddns_key_path
 
   providers = {
     google = google.ns2

@@ -76,6 +76,11 @@ resource "google_compute_instance" "ns" {
     master = var.master
     ns1_ip = var.ns1_ip
     ns2_ip = var.ns2_ip
+
+    ns1_ns2_key_name = var.ns1_ns2_key_name
+    ns1_ns2_key      = file(var.ns1_ns2_key_path)
+    ddns_key_name    = var.ddns_key_name
+    ddns_key         = file(var.ddns_key_path)
   })
 
   tags = [

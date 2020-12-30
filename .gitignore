@@ -2,6 +2,7 @@
 terraform
 *.tfstate
 *.tfplan
+*.key
 terraform.tfvars
 ns1_credentials.json
 ns2_credentials.json

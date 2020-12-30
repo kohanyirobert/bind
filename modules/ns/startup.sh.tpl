@@ -14,12 +14,23 @@ apt-get install --yes \
 conf=/etc/bind/named.conf.local
 test ! -f $conf && cp -v $conf $conf.orig
 cat > $conf << EOF
+include "/etc/bind/${ns1_ns2_key_name}.key";
+%{ if master ~}
+include "/etc/bind/${ddns_key_name}.key";
+%{ endif ~}
+
+server %{ if master }${ns2_ip}%{ else }${ns1_ip}%{ endif } {
+  keys {
+    ${ns1_ns2_key_name};
+  };
+};
+
 zone "${domain}" {
 %{~ if master }
   type master;
   file "db.${domain}";
-  allow-transfer {
-    ${ns2_ip};
+  update-policy {
+    grant ${ddns_key_name} zonesub ANY;
   };
 %{ else }
   type slave;
@@ -30,10 +41,26 @@ zone "${domain}" {
 %{ endif ~}
 };
 EOF
-%{ if master }
+
+reference_key=/etc/bind/rndc.key
+
+ns1_ns2_key=/etc/bind/${ns1_ns2_key_name}.key
+cat > $ns1_ns2_key << 'EOF'
+${ns1_ns2_key ~}
+EOF
+chown -v --reference=$reference_key $ns1_ns2_key
+chmod -v --reference=$reference_key $ns1_ns2_key
+
+%{ if master ~}
+ddns_key=/etc/bind/${ddns_key_name}.key
+cat > $ddns_key << 'EOF'
+${ddns_key ~}
+EOF
+chown -v --reference=$reference_key $ddns_key
+chmod -v --reference=$reference_key $ddns_key
+
 sudo -u bind -s << 'EOF1'
-zone=/var/cache/bind/db.${domain}
-cat > $zone << 'EOF2'
+cat > /var/cache/bind/db.${domain} << 'EOF2'
 $TTL 1m
 @   IN SOA ns1.${domain}. root.${domain}. (
            1  ; Serial
@@ -50,7 +77,7 @@ ns1 IN A   ${ns1_ip}
 ns2 IN A   ${ns2_ip}
 EOF2
 EOF1
-%{ endif }
+%{ endif ~}
 
 sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
