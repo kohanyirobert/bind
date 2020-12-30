@@ -11,9 +11,24 @@ apt-get install --yes \
   psmisc \
   tmux
 
-conf=/etc/bind/named.conf.local
-test ! -f $conf && cp -v $conf $conf.orig
-cat > $conf << EOF
+conf_options=/etc/bind/named.conf.options
+test ! -f $conf_options.orig && cp -v $conf_options $conf_options.orig
+cat > $conf_options << EOF
+options {
+  directory "/var/cache/bind";
+  dnssec-validation auto;
+  allow-transfer {
+    key ${ns1_ns2_key_name};
+  };
+  listen-on-v6 {
+    none;
+  };
+};
+EOF
+
+conf_local=/etc/bind/named.conf.local
+test ! -f $conf_local.orig && cp -v $conf_local $conf_local.orig
+cat > $conf_local << EOF
 include "/etc/bind/${ns1_ns2_key_name}.key";
 %{ if master ~}
 include "/etc/bind/${ddns_key_name}.key";

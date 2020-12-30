@@ -30,7 +30,7 @@ resource "google_compute_firewall" "allow-dns-zone-transfer" {
   ]
 
   source_ranges = [
-    "${var.ns2_ip}/32",
+    "0.0.0.0/0",
   ]
 
   allow {
