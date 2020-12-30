@@ -18,7 +18,7 @@ options {
   directory "/var/cache/bind";
   dnssec-validation auto;
   allow-transfer {
-    key ${ns1_ns2_key_name};
+    key %{ if master }${ns1_ns2_key_name}%{ else }none%{ endif };
   };
   listen-on-v6 {
     none;
