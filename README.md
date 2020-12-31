@@ -50,6 +50,16 @@ send
 EOF
 ```
 
+## Zone transfer
+
+Zones can be transferred by any host (local or remote) only out of the master/primary name server (`ns1`) using a TSIG key.
+
+```sh
+dig -k ns1-ns2.key @$(dig +short example.com. SOA | awk '{print $1}') example.com. AXFR
+```
+
+Note: the slave (`ns2`) doesn't allow zone transfers even with a TSIG key.
+
 ## Remote access
 
 Use one of these
