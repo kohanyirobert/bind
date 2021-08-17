@@ -64,7 +64,7 @@ resource "google_compute_firewall" "allow-mosh" {
 
 resource "google_compute_instance" "ns" {
   name         = var.name
-  machine_type = "f1-micro"
+  machine_type = "e2-micro"
   zone         = var.zone
 
   metadata = {
