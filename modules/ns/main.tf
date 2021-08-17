@@ -91,7 +91,7 @@ resource "google_compute_instance" "ns" {
 
   boot_disk {
     initialize_params {
-      image = "debian-10-buster-v20201112"
+      image = "debian-10-buster-v20210721"
       type  = "pd-standard"
       size  = 10
     }
